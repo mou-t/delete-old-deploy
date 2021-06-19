@@ -1,0 +1,7 @@
+name = "delete-old-deploy"
+type = "javascript"
+
+account_id = "bdbb41916628a65e4f8b9157e4d29237"
+workers_dev = true
+route = ""
+zone_id = ""
