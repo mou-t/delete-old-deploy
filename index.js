@@ -1,5 +1,6 @@
-const endpoint = "https://api.cloudflare.com/client/v4/accounts/" + ACCOUNT_ID + "/pages/projects/" + PROJECT_NAME + "/deployments";
+const deployments_endpoint = "https://api.cloudflare.com/client/v4/accounts/" + ACCOUNT_ID + "/pages/projects/" + PROJECT_NAME + "/deployments";
 const email = EMAIL;
+const expiration_days = 7;
 
 addEventListener("scheduled", (event) => {
   event.waitUntil(handleScheduled(event.scheduledTime));
@@ -7,7 +8,6 @@ addEventListener("scheduled", (event) => {
 
 async function handleScheduled(request) {
   const init = {
-    method: "POST",
     headers: {
       "content-type": "application/json;charset=UTF-8",
       "X-Auth-Email": email,
@@ -16,6 +16,29 @@ async function handleScheduled(request) {
     },
   };
 
-  const response = await fetch(endpoint, init);
-  return new Response(200);
+  let response = await fetch(deployments_endpoint, init);
+  let deployments = await response.json();
+  let to_delete = [];
+
+  deployments.result.forEach(function (deploy) {
+    if (
+      (Date.now() - new Date(deploy.created_on)) / 86400000 >
+      expiration_days
+    ) {
+      to_delete.push(deploy.id);
+    }
+  });
+
+  const delete_request = {
+    method: "DELETE",
+    headers: {
+      "content-type": "application/json;charset=UTF-8",
+      "X-Auth-Email": email,
+      "X-Auth-Key": API_KEY,
+    },
+  };
+  for (const id of to_delete) {
+    await fetch(deployments_endpoint + "/" + id, delete_request);
+  }
+  return new Response("OK", { status: 200 });
 }
