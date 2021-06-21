@@ -1,15 +1,12 @@
-# 👷 `worker-template` Hello World
+# delete-old-deploy
 
-A template for kick starting a Cloudflare worker project.
+1週間以上前のデプロイを削除する
 
-[`index.js`](https://github.com/cloudflare/worker-template/blob/master/index.js) is the content of the Workers script.
+[公式で紹介されてたやつ](https://developers.cloudflare.com/pages/platform/api#deleting-old-deployments-after-a-week) 
 
-#### Wrangler
+#### 環境変数
 
-To generate using [wrangler](https://github.com/cloudflare/wrangler)
-
-```
-wrangler generate projectname https://github.com/cloudflare/worker-template
-```
-
-Further documentation for Wrangler can be found [here](https://developers.cloudflare.com/workers/tooling/wrangler).
+ACCOUNT_ID
+API_KEY
+EMAIL
+PROJECT_NAME
